@@ -15,7 +15,7 @@ const createUser = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "User don't created",
+      message: "Sorry user don't created",
       error: {
         code: 404,
         description: error,

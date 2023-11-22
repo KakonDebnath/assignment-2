@@ -3,7 +3,7 @@ import { z } from 'zod';
 const UserZodValidationSchema = z.object({
   userId: z.number().int().positive(),
   username: z.string().min(3),
-  password: z.string().min(8),
+  password: z.string().max(20, "Password can not be more than 20 characters"),
   fullName: z.object({
     firstName: z.string().min(2),
     lastName: z.string().min(2),
