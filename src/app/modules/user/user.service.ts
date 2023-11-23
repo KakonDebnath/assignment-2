@@ -7,11 +7,18 @@ const createUser = async (userData: TUser) => {
   return result;
 };
 const getAllUsers = async () => {
-  const result = await User.find().select('username fullName age email address');
+  const result = await User.find().select(
+    'username fullName age email address',
+  );
+  return result;
+};
+const getUserById = async (id:number) => {
+  const result = await User.findOne({ userId: id }).select("userId username fullName age email address isActive hobbies"); 
   return result;
 };
 
 export const UserServices = {
   createUser,
   getAllUsers,
+  getUserById,
 };

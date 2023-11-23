@@ -1,9 +1,9 @@
-import { TUser } from './user.interface';
+import { TUser, UserModel } from './user.interface';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
-const UserSchema = new mongoose.Schema<TUser>({
+const UserSchema = new mongoose.Schema<TUser, UserModel>({
   userId: { type: Number, required: true, unique: true },
   username: { type: String, required: true },
   password: {
@@ -37,5 +37,13 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
+
+// create static methods
+
+UserSchema.statics.isUserExists = async function (id: string) {
+  const existingUser = await User.findOne({ id });
+  return existingUser;
+};
+
 // Create the Mongoose model for the user
-export const User = mongoose.model<TUser>('User', UserSchema);
+export const User = mongoose.model<TUser, UserModel>('User', UserSchema);

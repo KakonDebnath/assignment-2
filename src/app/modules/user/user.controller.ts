@@ -25,7 +25,7 @@ const createUser = async (req: Request, res: Response) => {
   }
 };
 
-const getAllUsers = async (req:Request, res:Response) => {
+const getAllUsers = async (req: Request, res: Response) => {
   try {
     const result = await UserServices.getAllUsers();
     res.status(200).json({
@@ -33,20 +33,52 @@ const getAllUsers = async (req:Request, res:Response) => {
       message: 'User retrieved successfully',
       data: result,
     });
-  } 
-  catch (error) {
+  } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Sorry Something went wrong data retrieved failed",
+      message: 'Sorry Something went wrong data retrieved failed',
       error: {
         code: 404,
         description: error,
       },
     });
-}
-}
+  }
+};
+
+const getUserById = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await UserServices.getUserById(Number(userId));
+    if (result === null) {
+      res.status(500).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found',
+        },
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: 'User retrieved successfully',
+        data: result,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Sorry Something went wrong data retrieved failed',
+      error: {
+        code: 404,
+        description: error,
+      },
+    });
+  }
+};
 
 export const UserControllers = {
   createUser,
-  getAllUsers
+  getAllUsers,
+  getUserById,
 };
