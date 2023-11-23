@@ -5,7 +5,7 @@ import config from '../../config';
 
 const UserSchema = new mongoose.Schema<TUser, UserModel>({
   userId: { type: Number, required: true, unique: true },
-  username: { type: String, required: true },
+  username: { type: String, required: true, trim: true },
   password: {
     type: String,
     required: true,
@@ -26,6 +26,7 @@ const UserSchema = new mongoose.Schema<TUser, UserModel>({
   },
 });
 
+// add password for save to database
 UserSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
@@ -37,11 +38,19 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
+UserSchema.post('save', async function (doc, next) {
+  if(doc.password){
+    delete doc.password;
+  }
+  next();
+});
 
 // create static methods
 
-UserSchema.statics.isUserExists = async function (id: string) {
-  const existingUser = await User.findOne({ id });
+UserSchema.statics.isUserExist = async function (id: number) {
+  const existingUser = await User.findOne({ userId: id }).select(
+    'userId username fullName age email address isActive hobbies',
+  );
   return existingUser;
 };
 

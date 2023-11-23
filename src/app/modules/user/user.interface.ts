@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import { Model } from 'mongoose';
 
 export type TUser = {
   userId: number;
@@ -26,5 +26,5 @@ export type TProduct = {
 };
 
 export interface UserModel extends Model<TUser> {
-  isUserExists(id: number): Promise<TUser | null>;
+  isUserExist(id: number): Promise<TUser | null>;
 }
