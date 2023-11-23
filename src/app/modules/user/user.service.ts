@@ -6,7 +6,12 @@ const createUser = async (userData: TUser) => {
   const result = await user.save();
   return result;
 };
+const getAllUsers = async () => {
+  const result = await User.find().select('username fullName age email address');
+  return result;
+};
 
 export const UserServices = {
   createUser,
+  getAllUsers,
 };
