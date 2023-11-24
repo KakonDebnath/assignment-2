@@ -24,7 +24,13 @@ const UserSchema = new mongoose.Schema<TUser, UserModel>({
     city: { type: String, required: true, trim: true },
     country: { type: String, required: true, trim: true },
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
+
+// query middleware
 
 // add password for save to database
 UserSchema.pre('save', async function (next) {
@@ -38,20 +44,21 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-UserSchema.post('save', async function (doc, next) {
-  if(doc.password){
-    delete doc.password;
-  }
+UserSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+UserSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
   next();
 });
 
 // create static methods
-
 UserSchema.statics.isUserExist = async function (id: number) {
-  const existingUser = await User.findOne({ userId: id }).select(
+  const isUserExists = await User.findOne({ userId: id }).select(
     'userId username fullName age email address isActive hobbies',
   );
-  return existingUser;
+  return isUserExists;
 };
 
 // Create the Mongoose model for the user

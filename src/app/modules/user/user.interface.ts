@@ -17,6 +17,7 @@ export type TUser = {
     city: string;
     country: string;
   };
+  isDeleted: boolean;
 };
 
 export type TProduct = {

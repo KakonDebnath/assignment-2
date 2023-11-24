@@ -17,6 +17,7 @@ const UserZodValidationSchema = z.object({
     city: z.string().min(3).trim(),
     country: z.string().min(3).trim(),
   }),
+  isDeleted: z.boolean(),
 });
 
 

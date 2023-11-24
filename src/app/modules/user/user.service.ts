@@ -30,8 +30,8 @@ const updateUser = async (
   return result;
 };
 
-const deleteUser = async (userId: number): Promise<TUser | null> => {
-  const result = await User.findOneAndDelete({ userId: userId });
+const deleteUser = async (userId: number) => {
+  const result = await User.updateOne({ userId: userId }, { isDeleted: true });
   return result;
 };
 
@@ -40,5 +40,5 @@ export const UserServices = {
   getAllUsers,
   getUserById,
   updateUser,
-  deleteUser
+  deleteUser,
 };

@@ -99,17 +99,20 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-const deleteUser = async (req: Request, res: Response) => {
+const deleteUser = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const { userId } = req.params;
     const result = await UserServices.deleteUser(Number(userId));
-    if (result === null) {
+    if (result.modifiedCount === 0) {
       res.status(500).json({
         success: false,
         message: "Sorry User didn't delete",
         error: {
           code: 404,
-          description: "Delete failed",
+          description: 'Delete failed',
         },
       });
     } else {
