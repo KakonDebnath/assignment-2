@@ -5,6 +5,9 @@ import { UserServices } from './user.service';
 const createUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
+    if(!userData.isDeleted) {
+      userData.isDeleted = false;
+    }
     const zodValidateData = UserZodValidationSchema.parse(userData);
     const result = await UserServices.createUser(zodValidateData);
     // const { password, ...resultWithoutPassword } = result.toObject();
@@ -28,11 +31,19 @@ const createUser = async (req: Request, res: Response) => {
 const getAllUsers = async (req: Request, res: Response) => {
   try {
     const result = await UserServices.getAllUsers();
-    res.status(200).json({
-      success: true,
-      message: 'User retrieved successfully',
-      data: result,
-    });
+    if(result.length > 0){
+      res.status(200).json({
+        success: true,
+        message: 'User retrieved successfully',
+        data: result,
+      });
+    }else{
+      res.status(200).json({
+        success: true,
+        message: 'No User Found',
+        data: result,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
