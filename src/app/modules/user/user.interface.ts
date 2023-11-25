@@ -27,11 +27,6 @@ export interface IUser {
   orders?: IOrder[];
 }
 
-export type TProduct = {
-  productName: string;
-  price: number;
-  quantity: number;
-};
 
 export interface UserModel extends Model<IUser> {
   isUserExist(id: number): Promise<IUser | null>;
