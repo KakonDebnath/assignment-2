@@ -52,6 +52,16 @@ export const addProductToOrders = async (
   return user;
 };
 
+export const getAllProducts = async (userId: number): Promise<IOrder[]> => {
+  const user = await User.findOne({ userId: userId });
+  if (!user) {
+    throw new Error('This User does not exist');
+  }
+  if (!user.orders || user.orders.length === 0) {
+    throw new Error("This User don't purchase  any order");
+  }
+  return user.orders;
+};
 export const UserServices = {
   createUser,
   getAllUsers,
@@ -59,4 +69,5 @@ export const UserServices = {
   updateUser,
   deleteUser,
   addProductToOrders,
+  getAllProducts
 };
