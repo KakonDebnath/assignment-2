@@ -11,13 +11,12 @@ const createUser = async (req: Request, res: Response) => {
     }
     const zodValidateData = UserZodValidationSchema.parse(userData);
     const result = await UserServices.createUser(zodValidateData);
-    // const result = await UserServices.createUser(userData);
 
-    // const { password, ...resultWithoutPassword } = result.toObject();
+    const { password, isDeleted, _id, orders, ...resultWithoutPassword } = result.toObject();
     res.status(200).json({
       success: true,
       message: 'User created successfully',
-      data: result,
+      data: resultWithoutPassword,
     });
   } catch (error) {
     res.status(500).json({

@@ -39,10 +39,12 @@ export const addProductToOrders = async (
   userId: number,
   productData: IOrder,
 ) => {
+  // find user existing or not
   const user = await User.findOne({ userId });
   if (!user) {
     throw new Error('This User does not exist');
   }
+  // if user order already exists then push new order
   if (user.orders) {
     user.orders.push(productData);
   } else {
@@ -53,10 +55,12 @@ export const addProductToOrders = async (
 };
 
 export const getAllProducts = async (userId: number): Promise<IOrder[]> => {
+  // find user exist or not
   const user = await User.findOne({ userId: userId });
   if (!user) {
     throw new Error('This User does not exist');
   }
+  // if user does not purchase product then throw an error
   if (!user.orders || user.orders.length === 0) {
     throw new Error("This User don't purchase  any order");
   }
@@ -64,15 +68,17 @@ export const getAllProducts = async (userId: number): Promise<IOrder[]> => {
 };
 
 export const getTotalPriceOfOrders = async (userId: number) => {
+  // find user exists or not
   const user = await User.findOne({ userId });
-// let price:number = 0;
   if (!user) {
     throw new Error('This user does not exist');
   }
+  // if user does not purchase product then throw an error
   if (!user.orders || user.orders.length === 0) {
     throw new Error("This User don't purchase  any order");
   }
 
+  // get total price using mongoose aggregation
   const totalPrice = User.aggregate([
     { $match: { userId } },
     { $unwind: '$orders' },
