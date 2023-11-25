@@ -1,4 +1,4 @@
-import { IUser } from './user.interface';
+import { IOrder, IUser } from './user.interface';
 import { User } from './user.model';
 
 const createUser = async (userData: IUser): Promise<IUser | null> => {
@@ -35,10 +35,48 @@ const deleteUser = async (userId: number) => {
   return result;
 };
 
+// const addNewProductToOrder = async (
+//   userId: number,
+//   product: IOrder,
+// ) => {
+//   const user = await User.findOneAndUpdate({ userId }, product, {
+//     new: true,
+//     runValidators: true,
+//   });
+//   if (!user) {
+//     throw new Error('User not found');
+//   }
+
+//   const orders = user.orders || [];
+//   orders.push(product);
+//   user.orders = orders;
+
+//   await user.save();
+//   return user;
+// };
+
+export const addProductToOrders = async (
+  userId: number,
+  productData: { productName: string; price: number; quantity: number },
+) => {
+  const user = await User.findOne({ userId });
+  if (!user) {
+    throw new Error('This User does not exist');
+  }
+  if (user.orders) {
+    user.orders.push(productData);
+  } else {
+    user.orders = [productData];
+  }
+  await user.save({ validateBeforeSave: false });
+  return user;
+};
+
 export const UserServices = {
   createUser,
   getAllUsers,
   getUserById,
   updateUser,
   deleteUser,
+  addProductToOrders,
 };

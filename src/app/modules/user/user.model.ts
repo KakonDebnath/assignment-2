@@ -1,7 +1,13 @@
-import { IUser, UserModel } from './user.interface';
+import { IOrder, IUser, UserModel } from './user.interface';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import config from '../../config';
+
+const ProductSchema = new mongoose.Schema<IOrder>({
+  productName: String,
+  price: Number,
+  quantity: Number,
+});
 
 const UserSchema = new mongoose.Schema<IUser, UserModel>({
   userId: { type: Number, required: true, unique: true },
@@ -28,6 +34,7 @@ const UserSchema = new mongoose.Schema<IUser, UserModel>({
     type: Boolean,
     default: false,
   },
+  orders: [ProductSchema],
 });
 
 // query middleware
@@ -43,8 +50,8 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 UserSchema.post('save', async function (doc, next) {
-  if(doc.password){
-    doc.password = "";
+  if (doc.password) {
+    doc.password = '';
   }
   next();
 });

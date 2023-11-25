@@ -1,15 +1,17 @@
 import { Request, Response } from 'express';
-import UserZodValidationSchema from './user.validation';
+// import UserZodValidationSchema from './user.validation';
 import { UserServices } from './user.service';
 
 const createUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
-    if(!userData.isDeleted) {
+    if (!userData.isDeleted) {
       userData.isDeleted = false;
     }
-    const zodValidateData = UserZodValidationSchema.parse(userData);
-    const result = await UserServices.createUser(zodValidateData);
+    // const zodValidateData = UserZodValidationSchema.parse(userData);
+    // const result = await UserServices.createUser(zodValidateData);
+    const result = await UserServices.createUser(userData);
+
     // const { password, ...resultWithoutPassword } = result.toObject();
     res.status(200).json({
       success: true,
@@ -31,13 +33,13 @@ const createUser = async (req: Request, res: Response) => {
 const getAllUsers = async (req: Request, res: Response) => {
   try {
     const result = await UserServices.getAllUsers();
-    if(result.length > 0){
+    if (result.length > 0) {
       res.status(200).json({
         success: true,
         message: 'User retrieved successfully',
         data: result,
       });
-    }else{
+    } else {
       res.status(200).json({
         success: true,
         message: 'No User Found',
@@ -153,10 +155,33 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+const orderProductToUser = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.userId;
+    const orderData = req.body;
+    await UserServices.addProductToOrders(Number(id), orderData);
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully',
+      data: null,
+    });
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Sorry Order created Failed',
+      error: {
+        code: 404,
+        description: error,
+      },
+    });
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUsers,
   getUserById,
   updateUser,
   deleteUser,
+  orderProductToUser,
 };
