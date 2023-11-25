@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+
 const UserZodValidationSchema = z.object({
   userId: z.number().int().positive(),
   username: z.string().min(3),
@@ -18,6 +19,11 @@ const UserZodValidationSchema = z.object({
     country: z.string().min(3).trim(),
   }),
   isDeleted: z.boolean(),
+  orders: z.array(z.object({
+    productName: z.string(),
+    price: z.number(),
+    quantity: z.number(),
+  })).optional()
 });
 
 

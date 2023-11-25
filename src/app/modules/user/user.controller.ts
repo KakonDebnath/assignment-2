@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-// import UserZodValidationSchema from './user.validation';
+import UserZodValidationSchema from './user.validation';
 import { UserServices } from './user.service';
 
 
@@ -9,9 +9,9 @@ const createUser = async (req: Request, res: Response) => {
     if (!userData.isDeleted) {
       userData.isDeleted = false;
     }
-    // const zodValidateData = UserZodValidationSchema.parse(userData);
-    // const result = await UserServices.createUser(zodValidateData);
-    const result = await UserServices.createUser(userData);
+    const zodValidateData = UserZodValidationSchema.parse(userData);
+    const result = await UserServices.createUser(zodValidateData);
+    // const result = await UserServices.createUser(userData);
 
     // const { password, ...resultWithoutPassword } = result.toObject();
     res.status(200).json({
