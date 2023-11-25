@@ -190,7 +190,7 @@ const getAllProducts = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: error.message || 'Sorry Order created Failed',
+      message: error.message || 'Sorry Order order fetched Failed',
       error: {
         code: 404,
         description: error,
@@ -198,6 +198,35 @@ const getAllProducts = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+const getTotalPriceOfOrders = async (req: Request, res: Response) =>{
+  try {
+    const { userId } = req.params;
+    const result = await UserServices.getTotalPriceOfOrders(Number(userId));
+    let totalPrice = 0;
+    if(result){
+      totalPrice = result[0].totalPrice
+    }
+    res.status(200).json({
+      success: true,
+      message: "Total price calculated successfully!",
+      data: {
+        totalPrice
+      }
+    })
+    
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Sorry Order order fetched Failed',
+      error: {
+        code: 404,
+        description: error,
+      },
+    });
+  }
+}
 
 export const UserControllers = {
   createUser,
@@ -207,4 +236,5 @@ export const UserControllers = {
   deleteUser,
   orderProductToUser,
   getAllProducts,
+  getTotalPriceOfOrders
 };
